@@ -36,7 +36,7 @@ class AccountRecordController extends AdminController
 
         $grid->disableCreateButton(); // 禁用新增按鈕
         $grid->disableFilter(); // 禁用漏斗
-        $grid->disableExport(); // 禁用匯出
+        // $grid->disableExport(); // 禁用匯出
         $grid->disableRowSelector(); // 禁用選取
         $grid->disableColumnSelector(); // 禁用像格子圖案的按鈕
 
