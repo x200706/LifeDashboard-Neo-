@@ -262,7 +262,7 @@ return [
     'upload' => [
 
         // Disk in `config/filesystem.php`.
-        'disk' => 'public',
+        'disk' => 'admin',
 
         // Image and file upload path under the disk above.
         'directory' => [
@@ -323,7 +323,7 @@ return [
         'color' => 'default',
 
         // sidebar-separate
-        'body_class' => [],
+        'body_class' => 'dark-mode',
 
         'horizontal_menu' => false,
 
@@ -332,7 +332,7 @@ return [
         // light, primary, dark
         'sidebar_style' => 'light',
 
-        'dark_mode_switch' => false,
+        'dark_mode_switch' => true,
 
         // bg-primary, bg-info, bg-warning, bg-success, bg-danger, bg-dark
         'navbar_color' => '',
