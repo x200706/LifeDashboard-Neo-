@@ -24,3 +24,20 @@ use Dcat\Admin\Show;
  * Admin::js('/packages/prettydocs/js/main.js');
  *
  */
+Admin::style('
+body.dark-mode a {
+    color: #a8a9bb!important;
+}
+body.dark-mode .btn-primary.btn-outline {
+    color: #a8a9bb!important;
+    border-color: #a8a9bb!important;
+}
+body.dark-mode .popover {
+    background-color: #223!important;
+}
+.select2-container--default .select2-search--inline .select2-search__field, .select2-container--default .select2-selection--single .select2-selection__rendered {
+    font-size: 14px!important;
+}
+input, input::placeholder {
+    font-size: 14px !important;
+}');

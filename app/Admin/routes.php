@@ -13,5 +13,9 @@ Route::group([
 ], function (Router $router) {
 
     $router->get('/', 'HomeController@index');
+    // 記帳
+    $router->resource('account', AccountController::class);
+    $router->resource('account-record', AccountRecordController::class);
+    $router->resource('account-record-tags', AccountRecordTagsController::class);
 
 });
