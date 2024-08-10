@@ -37,7 +37,9 @@ body.dark-mode .popover {
 }
 .select2-container--default .select2-search--inline .select2-search__field, .select2-container--default .select2-selection--single .select2-selection__rendered {
     font-size: 14px!important;
+    width: 150px!important;
 }
 input, input::placeholder {
     font-size: 14px !important;
-}');
+}
+');
