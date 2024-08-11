@@ -41,5 +41,6 @@ body.dark-mode .popover {
 }
 input, input::placeholder {
     font-size: 14px !important;
+    text-align: left !important;
 }
 ');
