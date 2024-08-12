@@ -38,23 +38,7 @@ class WinStockController extends AdminController
             $filter->panel();
         
             $filter->equal('stock_code', '股票代號')->width(3);
-            $filter->equal('stock_name', '股票名稱')->width(3);
-
-            $filter->whereBetween('today_close', function ($q) {
-                $start = $this->input['start'] ?? null;
-                $end = $this->input['end'] ?? null;
-            
-                $q->whereHas('goods', function ($q) use ($start,$end) {
-                    if ($start !== null) {
-                        $q->where('price', '>=', $start);
-                    }
-            
-                    if ($end !== null) {
-                        $q->where('price', '<=', $end);
-                    }
-                });
-            });  
-            
+            $filter->equal('stock_name', '股票名稱')->width(3);            
         });
 
         $grid->column('id', 'id')->sortable();
