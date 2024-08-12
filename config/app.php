@@ -54,7 +54,7 @@ return [
     |
     */
 
-    'url' => 'http://'.$_SERVER['SERVER_NAME'].':'.$_SERVER['SERVER_PORT'],
+    'url' => 'http://'.$_SERVER['HTTP_HOST'],
 
     'asset_url' => env('ASSET_URL'),
 

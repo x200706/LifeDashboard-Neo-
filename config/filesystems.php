@@ -39,7 +39,7 @@ return [
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),
-            'url' => 'http://'.$_SERVER['SERVER_NAME'].':'.$_SERVER['SERVER_PORT'].'/storage',
+            'url' => 'http://'.$_SERVER['HTTP_HOST'].'/storage',
             'visibility' => 'public',
             'throw' => false,
         ],
@@ -59,7 +59,7 @@ return [
             'driver' => 'local',
             'root' => public_path('uploads'),
             'visibility' => 'public',
-            'url' => 'http://'.$_SERVER['SERVER_NAME'].':'.$_SERVER['SERVER_PORT'].'/uploads',
+            'url' => 'http://'.$_SERVER['HTTP_HOST'].'/uploads',
         ],
     ],
 
