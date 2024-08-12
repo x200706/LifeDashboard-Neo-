@@ -17,5 +17,6 @@ Route::group([
     $router->resource('account', AccountController::class);
     $router->resource('account-record', AccountRecordController::class);
     $router->resource('account-record-tags', AccountRecordTagsController::class);
-
+    // 投資
+    $router->resource('win-stock', WinStockController::class);
 });

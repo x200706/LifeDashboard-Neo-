@@ -43,4 +43,7 @@ input, input::placeholder {
     font-size: 14px !important;
     text-align: left !important;
 }
+.input-group-text {
+    font-size: 14px !important;
+}
 ');
