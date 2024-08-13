@@ -38,16 +38,17 @@ class WinStockController extends AdminController
             $filter->panel();
         
             $filter->equal('stock_code', '股票代號')->width(3);
-            $filter->equal('stock_name', '股票名稱')->width(3);            
+            $filter->equal('stock_name', '股票名稱')->width(3);
+            $filter->date('today', '當天日期')->width(3);           
         });
 
         $grid->column('id', 'id')->sortable();
         $grid->column('stock_code', '股票代號');
         $grid->column('stock_name', '股票名稱');
         $grid->column('lastday', '前一天日期'); // 因為開盤日的前一天不一定是昨天啊~
-        $grid->column('today', '今天日期');
+        $grid->column('today', '當天日期'); // 其實當天的英文是that day
         $grid->column('lastday_close', '前一天收盤價');
-        $grid->column('today_close', '今天收盤價')->sortable();
+        $grid->column('today_close', '當天收盤價')->sortable();
         $grid->column('increase', '漲幅')->display(function () {
             $increase = number_format(($this->today_close - $this->lastday_close) / $this->lastday_close * 100, 2);
             return $increase > 0 ? "<span style='color:#e771ad'>$increase%</span>" : "<span style='color:#a1d174'>$increase%</span>";
