@@ -7,7 +7,10 @@ use Dcat\Admin\Form;
 use Dcat\Admin\Grid;
 use Dcat\Admin\Show;
 
+use Illuminate\Support\Facades\Log;
+
 use App\Models\WinStock;
+use App\Models\WinStockLabel;
 
 class WinStockController extends AdminController
 {
@@ -26,10 +29,12 @@ class WinStockController extends AdminController
     protected function grid()
     {
         $grid = new Grid(new WinStock);
+        $grid->model()->with(['label']);
         $grid->model()->orderBy('id', 'desc');
 
-        $grid->disableCreateButton(); // 禁用新增按鈕
+        // $grid->disableCreateButton(); // 禁用新增按鈕
         $grid->disableActions(); // 禁用單行異動按鈕
+        $grid->disableBatchDelete();
         $grid->disableRowSelector(); // 禁用選取
         $grid->disableColumnSelector(); // 禁用像格子圖案的按鈕
 
@@ -53,7 +58,32 @@ class WinStockController extends AdminController
             $increase = number_format(($this->today_close - $this->lastday_close) / $this->lastday_close * 100, 2);
             return $increase > 0 ? "<span style='color:#e771ad'>$increase%</span>" : "<span style='color:#a1d174'>$increase%</span>";
         });
+        $grid->column('label.label', '交易標籤');
+
+        $grid->quickCreate(function (Grid\Tools\QuickCreate $create) { 
+            $create->integer('label.swh_id', '交易序號');
+            $create->text('label.label', '交易標籤');
+        });
 
         return $grid;
     }
+    
+    protected function form()
+    {
+        $form = Form::make(WinStock::with('label'), function (Form $form) {     
+            $form->number('label.swh_id', '交易序號');
+            $form->text('label.label', '交易標籤');
+        });
+
+        $form->saving(function (Form $form) {
+            $swh_id = $form->input('label.swh_id');
+            Log::info(var_dump($swh_id));
+            $label = $form->input('label.label');
+            Log::info(var_dump($label));
+            WinStockLabel::insert(['swh_id' => $swh_id, 'label' => $label]);
+        });
+        
+        return $form;
+    }
+
 }
