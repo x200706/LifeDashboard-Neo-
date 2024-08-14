@@ -2,7 +2,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Models\WinStockLabel;
 
 class WinStock extends Model
 {
@@ -14,9 +13,4 @@ class WinStock extends Model
     public $timestamps = false; 
 
     protected $guarded = [];  
-
-    public function label()
-    {
-        return $this->hasOne(WinStockLabel::class, 'id', 'swh_id');
-    }
 }
