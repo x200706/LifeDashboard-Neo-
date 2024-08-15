@@ -19,4 +19,7 @@ Route::group([
     $router->resource('account-record-tags', AccountRecordTagsController::class);
     // 投資
     $router->resource('win-stock', WinStockController::class);
+    // 卡路里
+    $router->resource('calorie-record', CalorieRecordController::class);
+    $router->resource('calorie-tags', CalorieTagsController::class);
 });
