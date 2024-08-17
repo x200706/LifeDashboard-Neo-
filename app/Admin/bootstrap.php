@@ -46,4 +46,8 @@ input, input::placeholder {
 .input-group-text {
     font-size: 14px !important;
 }
+select.field_tag {
+    height: 100px !important;
+    font-size: 14px !important;
+}
 ');

@@ -7,11 +7,17 @@ use Dcat\Admin\Admin;
 use Dcat\Admin\Form;
 use Dcat\Admin\Grid;
 use Dcat\Admin\Show;
+use Dcat\Admin\Layout\Content;
+use Dcat\Admin\Layout\Row;
+
+use App\Admin\Metrics\TodayCalorie;
 
 use Illuminate\Support\Facades\Log;
 
 use App\Models\CalorieRecord;
 use App\Models\CalorieTags;
+
+use Illuminate\Routing\Controller;
 
 class CalorieRecordController extends AdminController
 {
@@ -21,6 +27,18 @@ class CalorieRecordController extends AdminController
      * @var string
      */
     protected $title = '卡路里紀錄';
+
+    
+    public function index(Content $content)
+    {
+        return $content
+            ->header('表格')
+            ->description('表格功能展示')
+            ->body(function (Row $row) {
+                $row->column(3, new TodayCalorie());
+            })
+            ->body($this->grid());
+    }
 
     /**
      * Make a grid builder.
@@ -52,16 +70,16 @@ class CalorieRecordController extends AdminController
             $create->date('date', '日期');
             $create->text('name', '名稱');
             $create->integer('amount', '卡路里');
-            $create->select('tag', '卡路里分類')->options(CalorieTags::all()->sortByDesc('type')->pluck('desc','name')->toArray());
-            $create->select('is_prototype', '原型食物')->options([0 => '否或運動', 1 => '是'])->default(0); // 連動表單有點麻煩，而且無論快速新增跟行內編輯應該都不支援，不如data維持一致性
+            $create->multipleSelect('tag', '卡路里標籤')->options(CalorieTags::all()->sortByDesc('type')->pluck('desc','name')->toArray());
+            $create->select('is_prototype', '原型食物')->options([0 => '🈚否或運動', 1 => '✅是'])->default(0); // 連動表單有點麻煩，而且無論快速新增跟行內編輯應該都不支援，不如data維持一致性
             $create->hidden('user_id', '紀錄者')->value(Admin::user()->id);
         });
 
         $grid->column('date', '日期')->editable();
         $grid->column('name', '名稱')->editable();
-        $grid->column('amount', '卡路里')->editable();
-        $grid->column('tag', '卡路里分類')->select(CalorieTags::all()->sortByDesc('type')->pluck('desc','name')->toArray());
-        $grid->column('is_prototype', '原型食物')->select([0 => '否或運動', 1 => '是']);
+        $grid->column('amount', '卡路里')->editable(); 
+        $grid->column('tag', '卡路里標籤')->checkbox(CalorieTags::all()->sortByDesc('type')->pluck('desc','name')->toArray(), true);
+        $grid->column('is_prototype', '原型食物')->select([0 => '🈚否或運動', 1 => '✅是']);
 
         return $grid;
     }
@@ -80,8 +98,10 @@ class CalorieRecordController extends AdminController
         $form->date('date', '日期');
         $form->text('name', '名稱');
         $form->number('amount', '卡路里');
-        $form->select('tag', '卡路里分類')->options(CalorieTags::all()->sortByDesc('type')->pluck('desc','name')->toArray());
-        $form->select('is_prototype', '原型食物')->options([0 => '否或運動', 1 => '是'])->default(0);
+        $form->checkbox('tag', '卡路里標籤')->options(CalorieTags::all()->sortByDesc('type')->pluck('desc','name')->toArray())->saving(function ($value) {
+            return json_encode($value);
+        });
+        $form->select('is_prototype', '原型食物')->options([0 => '🈚否或運動', 1 => '✅是'])->default(0);
         $form->hidden('user_id', '紀錄者')->value(Admin::user()->id);
 
         return $form;
