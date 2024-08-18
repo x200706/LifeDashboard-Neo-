@@ -21,19 +21,19 @@ use Illuminate\Routing\Controller;
 
 class CalorieRecordController extends AdminController
 {
-    /**
-     * Title for current resource.
-     *
-     * @var string
-     */
-    protected $title = '卡路里紀錄';
+    // /**
+    //  * Title for current resource.
+    //  *
+    //  * @var string
+    //  */
+    // protected $title = '卡路里紀錄';
 
     
     public function index(Content $content)
     {
         return $content
-            ->header('表格')
-            ->description('表格功能展示')
+            ->header('卡路里紀錄')
+            // ->description('表格功能展示')
             ->body(function (Row $row) {
                 $row->column(3, new TodayCalorie());
             })
