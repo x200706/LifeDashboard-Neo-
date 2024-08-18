@@ -70,7 +70,9 @@ class CalorieRecordController extends AdminController
             $create->date('date', '日期');
             $create->text('name', '名稱');
             $create->integer('amount', '卡路里');
-            $create->multipleSelect('tag', '卡路里標籤')->options(CalorieTags::all()->sortByDesc('type')->pluck('desc','name')->toArray());
+            $create->tags('tag', '卡路里標籤')->pluck('desc','name')->options(CalorieTags::all()->sortByDesc('type'))->saving(function ($value) {
+                return json_encode($value, JSON_UNESCAPED_UNICODE); // 然後直接json_encode還存編碼後的內容進DB..
+            }); // bug: 用複選即使saving回調轉json 也只能存到一個element（可以開F12觀察），用tags儲存才會存成Array...
             $create->hidden('user_id', '紀錄者')->value(Admin::user()->id);
         });
 
@@ -97,7 +99,7 @@ class CalorieRecordController extends AdminController
         $form->text('name', '名稱');
         $form->number('amount', '卡路里');
         $form->checkbox('tag', '卡路里標籤')->options(CalorieTags::all()->sortByDesc('type')->pluck('desc','name')->toArray())->saving(function ($value) {
-            return json_encode($value);
+            return json_encode($value, JSON_UNESCAPED_UNICODE);
         });
         
         $form->hidden('user_id', '紀錄者')->value(Admin::user()->id);
