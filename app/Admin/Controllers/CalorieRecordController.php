@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers;
 
+use App\Admin\Actions\Grid\SetDailyCalorieTool;
 use \Dcat\Admin\Http\Controllers\AdminController;
 use Dcat\Admin\Admin;
 use Dcat\Admin\Form;
@@ -16,7 +17,7 @@ use Illuminate\Support\Facades\Log;
 
 use App\Models\CalorieRecord;
 use App\Models\CalorieTags;
-
+use Dcat\Admin\Widgets\Metrics\Card;
 use Illuminate\Routing\Controller;
 
 class CalorieRecordController extends AdminController
@@ -48,6 +49,8 @@ class CalorieRecordController extends AdminController
     protected function grid()
     {
         $grid = new Grid(new CalorieRecord);
+
+        $grid->tools(new SetDailyCalorieTool());
 
         $grid->model()->where('user_id', '=', Admin::user()->id)->orderBy('date', 'desc');
 
