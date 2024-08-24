@@ -7,6 +7,7 @@ use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 
 use App\Models\CalorieRecord;
+use App\Models\SiteParam;
 
 class TodayCalorie extends Card
 {
@@ -36,10 +37,15 @@ class TodayCalorie extends Card
      */
     public function handle(Request $request)
     {
-        $this->content(CalorieRecord::where('date', '=', now())->sum('amount'));
-        $this->footer('KCAL');
+        $currentSettingDailyCalorie = json_decode(SiteParam::where('key', '=', 'daily_calorie_limit')->first()->value_array)[0];
+        $todayCalorie = CalorieRecord::where('date', '=', now())->sum('amount');
+        if ($todayCalorie > $currentSettingDailyCalorie) {
+            $this->content("<div class=\"text-danger\">{$todayCalorie}</div>");
+        } else {
+            $this->content($todayCalorie);
+        }
+        $this->footer('/'.$currentSettingDailyCalorie.'KCAL');
     }
-
 
     /**
      * 设置卡片底部内容.
