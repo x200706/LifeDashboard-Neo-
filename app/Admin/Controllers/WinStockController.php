@@ -8,7 +8,11 @@ use Dcat\Admin\Grid;
 use Dcat\Admin\Show;
 
 use App\Models\WinStock;
+use App\Models\FiveDaysTags;
+use App\Models\TenDaysTags;
+
 use App\Admin\Actions\Grid\SetStockTagsTool;
+use App\Models\StockTagList;
 
 class WinStockController extends AdminController
 {
@@ -30,10 +34,17 @@ class WinStockController extends AdminController
         $grid->model()->orderBy('id', 'desc');
 
         $grid->disableCreateButton(); // 禁用新增按鈕
-        $grid->disableActions(); // 禁用單行異動按鈕
+        // $grid->disableActions(); // 禁用單行異動按鈕
         $grid->disableRowSelector(); // 禁用選取
         $grid->disableColumnSelector(); // 禁用像格子圖案的按鈕
 
+        $grid->actions(function (Grid\Displayers\Actions $actions) {
+            $actions->disableDelete();
+            $actions->disableEdit();
+            $actions->disableQuickEdit();
+            $actions->disableView();
+        });
+        // $grid->setActionClass(Grid\Displayers\Actions::class);
         $grid->actions([new SetStockTagsTool()]);
 
         $grid->filter(function($filter){
@@ -55,6 +66,26 @@ class WinStockController extends AdminController
         $grid->column('increase', '漲幅')->display(function () {
             $increase = number_format(($this->today_close - $this->lastday_close) / $this->lastday_close * 100, 2);
             return $increase > 0 ? "<span style='color:#e771ad'>$increase%</span>" : "<span style='color:#a1d174'>$increase%</span>";
+        });
+        $grid->column('five_days_tag', '五日標籤')->display(function () {
+            $swh_id = $this->id;
+            $tags = FiveDaysTags::where('swh_id', '=', $swh_id)->pluck('tag')->toArray();
+            $html = '';
+            foreach ($tags as $tag) {
+                $tag_name = StockTagList::where('tag', '=', $tag)->first()->name;
+                $html .= "<span class='label' style='background:#6b794a'>$tag_name</span><br>";
+            }
+            return $html;
+        });
+        $grid->column('ten_days_tag', '十日標籤')->display(function () {
+            $swh_id = $this->id;
+            $tags = TenDaysTags::where('swh_id', '=', $swh_id)->pluck('tag')->toArray();
+            $html = '';
+            foreach ($tags as $tag) {
+                $tag_name = StockTagList::where('tag', '=', $tag)->first()->name;
+                $html .= "<span class='label' style='background:#6b794a'>$tag_name</span><br>";
+            }
+            return $html;
         });
 
         return $grid;
