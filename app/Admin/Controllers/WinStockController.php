@@ -8,6 +8,7 @@ use Dcat\Admin\Grid;
 use Dcat\Admin\Show;
 
 use App\Models\WinStock;
+use App\Admin\Actions\Grid\SetStockTagsTool;
 
 class WinStockController extends AdminController
 {
@@ -32,6 +33,8 @@ class WinStockController extends AdminController
         $grid->disableActions(); // 禁用單行異動按鈕
         $grid->disableRowSelector(); // 禁用選取
         $grid->disableColumnSelector(); // 禁用像格子圖案的按鈕
+
+        $grid->actions([new SetStockTagsTool()]);
 
         $grid->filter(function($filter){
             $filter->expand();
