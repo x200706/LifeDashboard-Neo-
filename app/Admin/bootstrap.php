@@ -50,4 +50,8 @@ select.field_tag {
     height: 100px !important;
     font-size: 14px !important;
 }
+.apexcharts-tooltip.apexcharts-theme-light {
+    border: 1px solid #e3e3e3;
+    background: rgb(44 44 67);
+}
 ');
