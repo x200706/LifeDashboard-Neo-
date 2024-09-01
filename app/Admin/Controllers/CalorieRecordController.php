@@ -13,6 +13,7 @@ use Dcat\Admin\Layout\Row;
 
 use App\Admin\Metrics\TodayCalorie;
 use App\Admin\Metrics\ExerciseFrequency;
+use App\Admin\Metrics\CalorieTrend;
 
 use Illuminate\Support\Facades\Log;
 
@@ -38,6 +39,7 @@ class CalorieRecordController extends AdminController
             // ->description('表格功能展示')
             ->body(function (Row $row) {
                 $row->column(3, new TodayCalorie());
+                $row->column(3, new CalorieTrend());
                 $row->column(3, new ExerciseFrequency());
             })
             ->body($this->grid());

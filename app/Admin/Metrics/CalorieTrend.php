@@ -12,12 +12,12 @@ use App\Models\CalorieTags;
 
 use Carbon\Carbon;
 
-class ExerciseFrequency extends Line
+class CalorieTrend extends Line
 {
     /**
      * @var string
      */
-    protected $label = '半年每月運動頻率';
+    protected $label = '兩個月內每日熱量趨勢';
 
     /**
      * 初始化卡片内容
@@ -40,29 +40,22 @@ class ExerciseFrequency extends Line
      */
     public function handle(Request $request)
     {
-      $sixMonthsAgo = Carbon::now()->subMonths(6)->format('Y-m-d');
-      $allCalorieRecord = CalorieRecord::where('date', '>=', $sixMonthsAgo)->get()->toArray();
-      $arrForMonthSum = [];
-
-      // 如果在循環內查詢非常耗能，先查回來存起來
-      $allTags = CalorieTags::all()->pluck('type', 'name')->toArray();
+      $sixtyDaysAgo = Carbon::now()->subDays(60)->format('Y-m-d');
+      $allCalorieRecord = CalorieRecord::where('date', '>=', $sixtyDaysAgo)->get()->toArray();
+      $arrForDaySum = [];
 
       foreach ($allCalorieRecord as $record) {
-        $recordTags = json_decode($record['tag']);
-        $recordYM = Carbon::createFromFormat('Y-m-d', $record['date'])->format('Ym');
-        foreach ($recordTags as $tag) { // 如果是空陣列也就不會進來這邊了
-            if ($allTags[$tag] === 'exercise') {
-                if (isset($arrForMonthSum[$recordYM])) {
-                    $arrForMonthSum[$recordYM] += 1;
-                } else {
-                    $arrForMonthSum[$recordYM] = 1;
-                }
-            }
+        $recordYMd = Carbon::createFromFormat('Y-m-d', $record['date'])->format('Ymd');
+        if (isset($arrForDaySum[$recordYMd])) {
+            $arrForDaySum[$recordYMd] += $record['amount'];
+        } else {
+            $arrForDaySum[$recordYMd] = $record['amount'];
         }
       }
+      Log::info($arrForDaySum);
       // 图表数据
       $this->withContent();
-      $this->withChart($arrForMonthSum);
+      $this->withChart($arrForDaySum);
     }
 
     /**
@@ -77,7 +70,7 @@ class ExerciseFrequency extends Line
         return $this->chart([
             'series' => [
                 [
-                    'name' => '次數',
+                    'name' => '熱量',
                     'data' => array_values($data),
                 ],
             ],

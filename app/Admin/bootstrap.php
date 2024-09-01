@@ -54,4 +54,8 @@ select.field_tag {
     border: 1px solid #e3e3e3;
     background: rgb(44 44 67);
 }
+.apexcharts-tooltip.apexcharts-theme-light .apexcharts-tooltip-title {
+    background: #2c2c43;
+    border-bottom: 1px solid #ddd;
+}
 ');
