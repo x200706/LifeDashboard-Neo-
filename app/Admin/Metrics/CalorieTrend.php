@@ -41,7 +41,7 @@ class CalorieTrend extends Line
     public function handle(Request $request)
     {
       $sixtyDaysAgo = Carbon::now()->subDays(60)->format('Y-m-d');
-      $allCalorieRecord = CalorieRecord::where('date', '>=', $sixtyDaysAgo)->get()->toArray();
+      $allCalorieRecord = CalorieRecord::where('date', '>=', $sixtyDaysAgo)->orderBy('date', 'asc')->get()->toArray();
       $arrForDaySum = [];
 
       foreach ($allCalorieRecord as $record) {

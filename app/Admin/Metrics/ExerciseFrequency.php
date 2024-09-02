@@ -41,7 +41,7 @@ class ExerciseFrequency extends Line
     public function handle(Request $request)
     {
       $sixMonthsAgo = Carbon::now()->subMonths(6)->format('Y-m-d');
-      $allCalorieRecord = CalorieRecord::where('date', '>=', $sixMonthsAgo)->get()->toArray();
+      $allCalorieRecord = CalorieRecord::where('date', '>=', $sixMonthsAgo)->orderBy('date', 'asc')->get()->toArray();
       $arrForMonthSum = [];
 
       // 如果在循環內查詢非常耗能，先查回來存起來
