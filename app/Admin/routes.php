@@ -25,4 +25,6 @@ Route::group([
     $router->resource('calorie-tags', CalorieTagsController::class);
     // 身體素質
     $router->resource('body-record', BodyRecordController::class);
+    // 餐廳收集
+    $router->resource('restaurant', RestaurantController::class);
 });
