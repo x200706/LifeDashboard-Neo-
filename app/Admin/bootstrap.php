@@ -58,4 +58,8 @@ select.field_tag {
     background: #2c2c43;
     border-bottom: 1px solid #ddd;
 }
+.grid-selector .select-options a.active {
+    color: #8ca1e7!important;
+    font-weight: 700;
+}
 ');

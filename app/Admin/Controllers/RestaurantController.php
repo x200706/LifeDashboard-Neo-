@@ -45,7 +45,7 @@ class RestaurantController extends AdminController
             $grid->selector(function (Grid\Tools\Selector $selector) {
                 $selector->select('zone', '地區', Restaurant::all()->pluck('zone', 'zone')->toArray());
 
-                $price_level = Restaurant::all()->pluck('price_level', 'price_level')->map(function($level) {
+                $price_level = Restaurant::orderBy('price_level', 'asc')->pluck('price_level', 'price_level')->map(function($level) {
                     return str_repeat('★', $level);
                 })->toArray();
                 $selector->select('price_level', '價位', $price_level);
@@ -57,8 +57,10 @@ class RestaurantController extends AdminController
                 foreach ($element_result as $element) {
                     $elements = array_merge($elements, json_decode($element, true));
                 }
-                $uniqueElements = array_values(array_unique($elements));
-                $selector->select('element', '主食類型', $uniqueElements); 
+                $uniqueElements = array_unique($elements);
+                $selector->select('element', '主要品項', $uniqueElements, function ($query, $value_from_page) use ($uniqueElements) { // 自定義查詢；那個$value_from_page竟然是string..
+                    $query->where('element','like', '%'.$uniqueElements[(int)$value_from_page].'%'); // like效能很差欸...誰叫你要在varchar存json字串...
+                });
             });
 
             $grid->column('name', '名稱');
@@ -76,7 +78,7 @@ class RestaurantController extends AdminController
 
             $grid->column('style', '風格');
 
-            $grid->column('element', '主食類型')->display(function ($element) {
+            $grid->column('element', '主要品項')->display(function ($element) {
                 return json_decode($element, true); // 字串型別的json還原回php array
             })->label();
             
@@ -112,14 +114,20 @@ class RestaurantController extends AdminController
     protected function form()
     {
         return Form::make(new Restaurant(), function (Form $form) {
+            $form->footer(function ($footer) {
+                $footer->disableViewCheck();
+                $footer->disableEditingCheck();
+                $footer->disableCreatingCheck();
+            });
             $form->text('name', '名稱');
             $form->text('zone', '地區');
             $form->select('price_level', '價位')->options([1 =>'★', 2 => '★★', 3 => '★★★', 4 => '★★★★', 5 => '★★★★★']);
             $form->text('style', '風格');
-            $form->tags('element', '主食類型')->placeholder('請用逗號分隔')->saving(function ($value) {
+            $form->tags('element', '主要品項')->placeholder('請用逗號分隔')->saving(function ($value) {
                 return json_encode($value, JSON_UNESCAPED_UNICODE);
             });
             $form->textarea('memo', '備註');
+
         });
     }
 }
